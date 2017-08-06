@@ -1,8 +1,10 @@
 import webapp2
+import logging
 from models import Comments
 
 from webapp2_extras import jinja2
 from google.appengine.api import users
+from google.appengine.api import taskqueue
 
 class BaseHandler(webapp2.RequestHandler):
     @webapp2.cached_property
@@ -47,3 +49,21 @@ class CommentHandler(BaseHandler):
         comment.put()
 
         self.redirect('/comment')
+
+
+class RemoveHandler(webapp2.RequestHandler):
+    def get(self):
+        list = Comments.query().fetch(keys_only=True)
+        total = 0
+        for item in list:
+            task = taskqueue.add(url='/remove', params={'id': item.id()})
+            total += 1
+        logging.info('Total {}'.format(total))
+
+    def post(self):
+        id = self.request.get('id')
+        comment = Comments.get_by_id(int(id))
+        if comment:
+            comment.key.delete()
+        else:
+            logging.error('Not found {}'.format(id))

@@ -12,4 +12,5 @@ app = webapp2.WSGIApplication([
     ('/', HomeHandler),
     ('/(\d+)', HomeHandler),
     ('/comment', CommentHandler),
+    ('/remove', RemoveHandler),
     ], debug=True)

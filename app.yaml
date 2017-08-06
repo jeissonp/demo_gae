@@ -15,6 +15,10 @@ handlers:
   script: backend.app
   login: required
 
+- url: /remove
+  script: backend.app
+  login: admin
+
 libraries:
 - name: webapp2
   version: "2.5.2"
