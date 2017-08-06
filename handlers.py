@@ -16,7 +16,7 @@ class BaseHandler(webapp2.RequestHandler):
         user = users.get_current_user()
         kwargs.update({
             'email': user.email(),
-            'logout': users.create_login_url('/')
+            'logout': users.create_logout_url('/')
         })
 
         render = self.jinja2.render_template(filename, **kwargs)
